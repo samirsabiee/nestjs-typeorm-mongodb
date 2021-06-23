@@ -5,13 +5,11 @@ import { ArticleModule } from './article/article.module';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {mongodbConfig} from "../config/mongodb.config";
 import {Connection} from "typeorm";
-import {Article} from "./article/entities/article.entity";
 
 @Module({
   imports: [
       TypeOrmModule.forRoot(mongodbConfig),
-      ArticleModule,
-      TypeOrmModule.forFeature([Article])
+      ArticleModule
   ],
   controllers: [AppController],
   providers: [AppService],

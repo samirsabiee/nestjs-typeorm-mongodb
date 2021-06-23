@@ -3,29 +3,32 @@ import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Article} from "./entities/article.entity";
-import {MongoRepository} from "typeorm";
+import {ArticleRepository} from "./repositories/article.repository";
+import {UpdateResult} from "typeorm";
 
 @Injectable()
 export class ArticleService {
-  constructor(@InjectRepository(Article) articleRepository: MongoRepository<Article>) {
-  }
-  create(createArticleDto: CreateArticleDto) {
-    return 'This action adds a new article';
-  }
-
-  findAll() {
-    return `This action returns all article`;
+  constructor(
+      @InjectRepository(ArticleRepository)
+      private articleRepository: ArticleRepository
+  ) {}
+  async create(createArticleDto: CreateArticleDto): Promise<Article> {
+    return this.articleRepository.save(createArticleDto);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} article`;
+  async findAll(): Promise<Article[]> {
+    return this.articleRepository.find();
   }
 
-  update(id: number, updateArticleDto: UpdateArticleDto) {
-    return `This action updates a #${id} article`;
+  async findOne(id: string): Promise<Article> {
+    return this.articleRepository.findOne(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} article`;
+  update(id: string, updateArticleDto: UpdateArticleDto): Promise<UpdateResult> {
+    return this.articleRepository.update(id,updateArticleDto);
+  }
+
+  async remove(id: string) {
+    return this.articleRepository.delete(id);
   }
 }
